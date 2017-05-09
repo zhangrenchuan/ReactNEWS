@@ -1,0 +1,14 @@
+.imgNews{
+  float: left;
+  margin-right: 12px;
+  margin-bottom: 10px
+}
+
+.imgNews h3{
+  /*不换行*/
+  white-space: nowrap;
+  overflow: hidden;
+  /*文本溢出显示省略号*/
+  text-overflow: ellipsis;
+  color: #666;
+}

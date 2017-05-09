@@ -1,0 +1,55 @@
+/*设置新闻页面样式*/
+.news_Container{
+  margin-top: 15px;
+}
+/*设置轮播图宽度*/
+.leftCont{
+  width: 500px;
+  float: left;
+}
+
+/*页签新闻样式*/
+.news_tabs{
+  float: left;
+  width: 450px;
+  padding-left: 10px;
+  margin-bottom: 5px;
+}
+
+.news_tabs a{
+  display: block;
+
+  font-size: 14px;
+
+  /*设置文本样式*/
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  color: #666666;
+}
+
+/*右页签链接样式*/
+.news_product{
+  float: left;
+  width: 300px;
+
+  padding-left: 10px;
+  margin-bottom: 5px;
+}
+
+/*设置外链样式*/
+.pro{
+  padding: 5px;
+  overflow: hidden;
+  font-size: 15px;
+}
+.pro a{
+  float: left;
+  line-height: 30px;
+  margin-right: 8px;
+}
+.pro_bg{
+  background-color: #eee;
+  margin-top: 10px;
+}
