@@ -191,6 +191,10 @@
 ----------
 ## 第三阶段: 基本路由实现
 ### `index.js`
+###### path="/" 根路由
+###### IndexRoute 默认请求 子路由
+###### path="/news_detail/:news_id" 新闻详情 子路由
+###### path="/user_center" 个人中心 子路由
 
 	import React from 'react'
 	import ReactDOM from 'react-dom'
@@ -215,6 +219,9 @@
 	);
 
 ### `app.jsx`
+###### 需要引入顶部组件和底部组件
+###### 主组件路由请求的子组件显示的内容都在this.props.children
+
 	import React from 'react';
 	import NewsHeader from './header/news_header_Login_Reg'
 	import NewsFooter from './footer/news_footer'
@@ -582,6 +589,18 @@
 ----------
 ## 第四阶段: 各组件实现
 ### header \ `news_header_Login_Reg.jsx` 组件
+###### 使用antd里栅格系统进行顶部组件的布局(antd栅格为24)
+###### 两侧各留白占1 logo位置占3(LOGO图片和文字) 其余占19
+###### 引入Menu和Icon插件. 其余位置添加menu.item 需要有唯一的key值
+###### 设置菜单样式 mode属性为horizontal(横屏)
+###### 初始化按钮的点击状态为首页(通过key值判断)
+###### 定义点击菜单切换key的方法 (修改状态根据key值的状态)
+###### 定义用户登录的菜单框.初始化用户名和用户id
+###### 定义用户菜单. 登录时的样式和未登录的样式(三元运算符判断)  
+###### 登录时的菜单有三个按钮. 未登录时就是普通的icon图标
+###### 处理表单项登录和注册的方法
+###### Form.create()(NewsHeader);最外层有一个Form对象
+
 	import React from 'react';
 	import axios from 'axios';
 	import {
@@ -909,6 +928,8 @@
 ----------
 
 ### footer \ `news_footer.jsx` 组件
+###### 使用antd栅格系统进行布局并设置底部样式
+###### 单独引入底部的css样式
 
 	import React from 'react'
 	import {
@@ -943,93 +964,11 @@
 	}
 
 ----------
-### news\ `news_block.jsx` 组件
-	import React from 'react'
-	import {Card} from 'antd'
-	import axios from 'axios'
-	import {Link} from 'react-router'
-	import '../../componentsCss/news_img_block.css'
-
-	class NewsBlock extends React.Component{
-	    constructor(props){
-	      super(props);
-	      this.state = {
-	        //初始化图片新闻的状态
-	        newsArr : []
-	      }
-	    }
-
-    //将要挂载时 发送
-    componentWillMount(){
-      let {type,count} = this.props;
-      //配置URL参数
-      let url = `http://newsapi.gugujiankong.com/Handler.ashx?action=getnews&type=${type}&count=${count}`;
-      //发送ajax请求获取图片新闻
-      axios.get(url)
-        .then(response => {
-          //获取新闻数据
-          let newsArr = response.data;
-          console.log('这是URL获得的新闻数据',response.data);
-          //更新状态
-          this.setState({newsArr})
-        })
-        .catch(error => {
-          console.log(error.message);
-        })
-    }
-
-    render(){
-      let {newsArr} = this.state;
-      let newsList = newsArr.length > 0
-      ?(
-        newsArr.map((item,index) => {
-          return (
-              <li>
-                <Link to={`/news_detail/${item.uniquekey}`}>{item.title}</Link>
-              </li>
-          )
-        })
-       )
-       :'没有新闻推送';
-
-        return (
-          <div>
-            <Card>
-              <ul>
-                {newsList}
-              </ul>
-            </Card>
-          </div>
-        )
-      }
-    }
-
-	//规定组件props属性的数据类型
-	NewsBlock.propTypes = {
-	  type: React.PropTypes.string.isRequired,
-	  count: React.PropTypes.number.isRequired
-	};
-	export default NewsBlock
-
-### componentsCss \ `news_img_block.css`
-	.imgNews{
-	  float: left;
-	  margin-right: 12px;
-	  margin-bottom: 10px
-	}
-	
-	.imgNews h3{
-	  /*不换行*/
-	  white-space: nowrap;
-	  overflow: hidden;
-	  /*文本溢出显示省略号*/
-	  text-overflow: ellipsis;
-	  color: #666;
-	}
-
-----------
 
 ### news \ `news_img_block.jsx` 组件
+###### 规定组件props属性
+###### 初始化图片新闻的状态
+###### 在componentWillMount(){} 时发送请求
 
 	import React from 'react'
 	import {Card} from 'antd'
@@ -1107,6 +1046,92 @@
 	  imgWidth: React.PropTypes.string.isRequired,
 	};
 	export default NewsImg
+	
+### componentsCss \ `news_img_block.css`
+	.imgNews{
+	  float: left;
+	  margin-right: 12px;
+	  margin-bottom: 10px
+	}
+	
+	.imgNews h3{
+	  /*不换行*/
+	  white-space: nowrap;
+	  overflow: hidden;
+	  /*文本溢出显示省略号*/
+	  text-overflow: ellipsis;
+	  color: #666;
+	}
+
+----------
+
+### news\ `news_block.jsx` 组件
+	import React from 'react'
+	import {Card} from 'antd'
+	import axios from 'axios'
+	import {Link} from 'react-router'
+	import '../../componentsCss/news_img_block.css'
+
+	class NewsBlock extends React.Component{
+	    constructor(props){
+	      super(props);
+	      this.state = {
+	        //初始化图片新闻的状态
+	        newsArr : []
+	      }
+	    }
+
+    //将要挂载时 发送
+    componentWillMount(){
+      let {type,count} = this.props;
+      //配置URL参数
+      let url = `http://newsapi.gugujiankong.com/Handler.ashx?action=getnews&type=${type}&count=${count}`;
+      //发送ajax请求获取图片新闻
+      axios.get(url)
+        .then(response => {
+          //获取新闻数据
+          let newsArr = response.data;
+          console.log('这是URL获得的新闻数据',response.data);
+          //更新状态
+          this.setState({newsArr})
+        })
+        .catch(error => {
+          console.log(error.message);
+        })
+    }
+
+    render(){
+      let {newsArr} = this.state;
+      let newsList = newsArr.length > 0
+      ?(
+        newsArr.map((item,index) => {
+          return (
+              <li>
+                <Link to={`/news_detail/${item.uniquekey}`}>{item.title}</Link>
+              </li>
+          )
+        })
+       )
+       :'没有新闻推送';
+
+        return (
+          <div>
+            <Card>
+              <ul>
+                {newsList}
+              </ul>
+            </Card>
+          </div>
+        )
+      }
+    }
+
+	//规定组件props属性的数据类型
+	NewsBlock.propTypes = {
+	  type: React.PropTypes.string.isRequired,
+	  count: React.PropTypes.number.isRequired
+	};
+	export default NewsBlock
 
 ----------
 
@@ -1217,6 +1242,8 @@
 ----------
 
 ### `news_container.jsx` 组件
+###### 布置新闻列表
+
 	import React from 'react';
 	import NewsImgBlock from './news/news_img_block'
 	import NewsBlock from './news/news_block'
@@ -1353,6 +1380,9 @@
 
 ----------
 ### detail_comments \ `news_comments.jsx` 组件
+###### 根据接口文档获得评论数据
+###### 定义提交评论的按钮方法和收藏文章的方法
+
 	import React from 'react';
 	import axios from 'axios'
 	import {Card,Form,Input,Button,Row,Col,message,notification } from 'antd';
@@ -1495,6 +1525,9 @@
 ----------
 
 ### `news_detail.jsx` 组件
+###### dangerouslySetInnerHTML作用: 让react显示html代码
+###### __html属性指定的就是要显示的HTML代码
+
 	import React from 'react';
 	import {
 	  Row,
@@ -1567,6 +1600,8 @@
 
 ----------
 ### `user_center.jsx` 组件
+###### 添加三个页签: 评论列表\收藏列表\上传头像
+
 	import React from 'react';
 	import {
 	  Row,
