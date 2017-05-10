@@ -203,7 +203,7 @@
 	
 	ReactDOM.render(
 	    (
-		  <Router history={hashHistory}>
+	     <Router history={hashHistory}>
 	        <Route path="/" component={App}>
 	          <IndexRoute component={NewsContainer}></IndexRoute>
 	          <Route path="/news_detail/:news_id" component={NewsDetail}></Route>
